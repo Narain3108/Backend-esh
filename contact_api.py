@@ -10,7 +10,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://eshkol.vercel.app"],  # Change to your frontend URL in production
+    allow_origins=["https://eshkol.vercel.app","https://backend-esh.onrender.com"],  # Change to your frontend URL in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -120,7 +120,7 @@ async def keep_alive():
     while True:
         try:
             async with httpx.AsyncClient() as client:
-                await client.get("http://localhost:8000/health", timeout=10)
+                await client.get("https://backend-esh.onrender.com/health", timeout=10)
         except Exception as e:
             pass  # Ignore errors
         await asyncio.sleep(180)  # 5 minutes
