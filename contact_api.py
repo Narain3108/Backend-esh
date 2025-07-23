@@ -10,14 +10,22 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://eshkol.vercel.app","https://backend-esh.onrender.com"],  # Change to your frontend URL in production
+    allow_origins=[
+        "https://eshkol.vercel.app",
+        "https://backend-esh.onrender.com",
+        "https://eshkol.in"
+
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-YOUR_EMAIL = "narainkarthikeyan0405@gmail.com"
-YOUR_EMAIL_PASSWORD = "cdzg urax comy tazg"  # Use Gmail App Password
+YOUR_EMAIL = "info@kodaicoolstay.com"
+YOUR_EMAIL_PASSWORD = "Aash@1006"  # ⚠️ Consider using environment variables in production
+
+SMTP_HOST = "smtp.hostinger.com"
+SMTP_PORT = 587
 
 @app.get("/health")
 async def health_check():
@@ -41,8 +49,8 @@ async def send_contact_email(
 
     await aiosmtplib.send(
         msg_to_self,
-        hostname="smtp.gmail.com",
-        port=587,
+        hostname=SMTP_HOST,
+        port=SMTP_PORT,
         start_tls=True,
         username=YOUR_EMAIL,
         password=YOUR_EMAIL_PASSWORD,
@@ -59,8 +67,8 @@ async def send_contact_email(
 
     await aiosmtplib.send(
         msg_to_user,
-        hostname="smtp.gmail.com",
-        port=587,
+        hostname=SMTP_HOST,
+        port=SMTP_PORT,
         start_tls=True,
         username=YOUR_EMAIL,
         password=YOUR_EMAIL_PASSWORD,
@@ -87,8 +95,8 @@ async def send_booking_email(
 
     await aiosmtplib.send(
         msg_to_self,
-        hostname="smtp.gmail.com",
-        port=587,
+        hostname=SMTP_HOST,
+        port=SMTP_PORT,
         start_tls=True,
         username=YOUR_EMAIL,
         password=YOUR_EMAIL_PASSWORD,
@@ -105,8 +113,8 @@ async def send_booking_email(
 
     await aiosmtplib.send(
         msg_to_user,
-        hostname="smtp.gmail.com",
-        port=587,
+        hostname=SMTP_HOST,
+        port=SMTP_PORT,
         start_tls=True,
         username=YOUR_EMAIL,
         password=YOUR_EMAIL_PASSWORD,
@@ -121,10 +129,12 @@ async def keep_alive():
         try:
             async with httpx.AsyncClient() as client:
                 await client.get("https://backend-esh.onrender.com/health", timeout=10)
-        except Exception as e:
-            pass  # Ignore errors
-        await asyncio.sleep(180)  # 5 minutes
+        except Exception:
+            pass
+        await asyncio.sleep(180)  # 3 minutes
 
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(keep_alive())
+
+
